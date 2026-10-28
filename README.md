@@ -27,7 +27,15 @@ Project topic: **Logistic Regression for Supply Chain Late Delivery Risk Predict
 | Interactive Notebooks | Google Colab, Jupyter Notebook |
 | Dataset Source | Kaggle (DataCo Global Supply Chain) |
 
-![Project Pipeline](assets/readme/pipeline-diagram.jpg)
+```mermaid
+flowchart LR
+    A[Kaggle Dataset<br/>180,519 records] --> B[MongoDB Atlas<br/>Cloud Ingestion]
+    B --> C[PySpark Pipeline<br/>Cleaning & Indexing]
+    C --> D[Correlation & Multicollinearity<br/>Feature Selection]
+    D --> E[StandardScaler &<br/>VectorAssembler]
+    E --> F[PySpark MLlib<br/>Logistic Regression]
+    F --> G[Interactive Flask<br/>Executive Web App]
+```
 
 ---
 
@@ -137,7 +145,28 @@ The architecture contains three main stages:
 2. **Storage**: Data is exported to MongoDB Atlas.
 3. **Modeling**: PySpark is used for preprocessing, feature engineering, model training, and evaluation.
 
-![Data Pipeline from PowerPoint](assets/readme/ppt-image-1.png)
+```mermaid
+flowchart TD
+    subgraph INGESTION["1. Cloud Ingestion and Storage"]
+        K[Kaggle DataCo Dataset] --> C[Google Colab / Python Ingestion]
+        C --> M[("MongoDB Atlas Cloud<br/>Regression_loogistic.preprocessing")]
+    end
+    subgraph PREPROCESSING["2. PySpark Data Processing"]
+        M --> P[PySpark Session]
+        P --> D[Data Cleaning & Null Handling]
+        D --> S[StringIndexer & OneHotEncoder]
+        S --> F[Feature Correlation & Multicollinearity Filtering]
+        F --> V[VectorAssembler & StandardScaler]
+    end
+    subgraph MODELING["3. Machine Learning and Inference"]
+        V --> T[80/20 Train-Test Split]
+        T --> LR[Spark MLlib Logistic Regression]
+        T --> RF[Spark MLlib Random Forest]
+        T --> PD[Pre-Dispatch Zero Leakage Model]
+        LR --> E["Model Evaluation<br/>AUC 0.9851 · Recall 97.65%"]
+        E --> W[Flask Executive Web Application]
+    end
+```
 
 
 The project ingestion process uses:
@@ -325,7 +354,7 @@ The model is evaluated using:
 - F1-score
 - Confusion matrix
 
-![Evaluation Report Page](assets/readme/pdf-page-8.png)
+![Model Analytics & Benchmark](assets/readme/model-analytics.png)
 
 ---
 
@@ -522,16 +551,20 @@ Open your browser at: `http://127.0.0.1:5000`
 
 ![Executive Operations Dashboard](assets/readme/web-dashboard.png)
 
-### Real-Time Order Risk Assessor
+### Real-Time Order Risk Assessor (Dual Mode)
 
 ![Full-Screen Order Risk Assessor](assets/readme/order-assessor.png)
+
+### Model Intelligence & Performance Benchmark
+
+![Model Analytics & Benchmark](assets/readme/model-analytics.png)
+
+### MongoDB Atlas Order Book Explorer
+
+![MongoDB Atlas Explorer](assets/readme/mongodb-explorer.png)
 
 ### PySpark Feature Correlation Heatmap
 
 ![Feature Correlation Matrix](assets/correlation_heatmap.png)
-
-### Dataset Overview & Architecture
-
-![Dataset Columns](assets/readme/ppt-image-12.png)
 
 

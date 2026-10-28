@@ -20,3 +20,4 @@ atlas-credentials.env
 
 # Temporary render files
 README.rendered.html
+scratch/

@@ -200,4 +200,11 @@ window.addEventListener('DOMContentLoaded', () => {
   if (typeof renderWeeklyPerformanceChart === 'function') {
     renderWeeklyPerformanceChart();
   }
+
+  // Handle direct tab routing via ?tab= or #hash
+  const urlParams = new URLSearchParams(window.location.search);
+  const requestedTab = urlParams.get('tab') || window.location.hash.replace('#', '');
+  if (requestedTab && ['overview', 'assess', 'analytics', 'mongodb'].includes(requestedTab)) {
+    switchView(requestedTab);
+  }
 });
