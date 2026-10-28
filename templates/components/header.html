@@ -1,0 +1,96 @@
+<header class="h-16 border-b border-subtle bg-app-dark sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto h-full px-4 sm:px-6 lg:px-10 flex items-center justify-between">
+    
+    <!-- Brand & Breadcrumbs (Left) -->
+    <div class="flex items-center space-x-3 shrink-0">
+      <a href="#" onclick="switchView('overview'); return false;" class="w-9 h-9 rounded-lg bg-[#214e3b] flex items-center justify-center text-white font-bold text-xs tracking-wider shadow-sm hover:brightness-110 transition">
+        SC
+      </a>
+      <div class="flex items-center space-x-1.5 text-xs sm:text-sm text-[#7c8780]">
+        <span>Operations</span>
+        <span class="text-[#434b45]">/</span>
+        <span id="breadcrumb-current" class="text-[#eaede8] font-bold">Overview</span>
+      </div>
+    </div>
+
+    <!-- Desktop Navigation Tabs (Center) - Hidden on medium and below (< md) -->
+    <nav class="hidden md:flex items-center space-x-1 bg-[#151a17] border border-[#232b25] p-1 rounded-xl text-xs">
+      <!-- 1. Overview -->
+      <button onclick="switchView('overview')" id="nav-btn-overview" class="nav-tab-btn px-3.5 py-1.5 rounded-lg font-medium transition flex items-center space-x-2 text-emerald-400 bg-[#1c2921] border border-[#27382d]">
+        <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+        <span>Overview</span>
+      </button>
+
+      <!-- 2. Assess Order -->
+      <button onclick="switchView('assess')" id="nav-btn-assess" class="nav-tab-btn px-3.5 py-1.5 rounded-lg font-medium transition flex items-center space-x-2 text-[#7c8780] hover:text-[#d3ded7] hover:bg-[#1a211d]">
+        <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+        <span>Assess Order</span>
+      </button>
+
+      <!-- 3. Model Analytics -->
+      <button onclick="switchView('analytics')" id="nav-btn-analytics" class="nav-tab-btn px-3.5 py-1.5 rounded-lg font-medium transition flex items-center space-x-2 text-[#7c8780] hover:text-[#d3ded7] hover:bg-[#1a211d]">
+        <i data-lucide="columns-2" class="w-3.5 h-3.5"></i>
+        <span>Model Analytics</span>
+      </button>
+
+      <!-- 4. Order Book -->
+      <button onclick="switchView('mongodb')" id="nav-btn-mongodb" class="nav-tab-btn px-3.5 py-1.5 rounded-lg font-medium transition flex items-center space-x-2 text-[#7c8780] hover:text-[#d3ded7] hover:bg-[#1a211d]">
+        <i data-lucide="database" class="w-3.5 h-3.5"></i>
+        <span>Order Book</span>
+      </button>
+    </nav>
+
+    <!-- Right Controls: Snapshot Badge & Mobile Hamburger -->
+    <div class="flex items-center space-x-3 shrink-0">
+      <!-- Model Snapshot Badge (Visible on larger screens) -->
+      <div class="hidden lg:flex items-center px-3 py-1.5 rounded-lg border border-[#26312a] bg-[#141a16] text-[10px] font-mono tracking-wider text-[#a0aca3] uppercase">
+        SNAPSHOT &middot; 28 OCT 2026
+      </div>
+
+      <!-- Hamburger Button (Visible on screens below md: 768px) -->
+      <button onclick="toggleMobileMenu()" id="hamburger-btn" class="md:hidden w-9 h-9 rounded-lg bg-[#161c18] border border-[#26312a] text-[#9db2a5] hover:text-white flex items-center justify-center transition" aria-label="Toggle navigation menu">
+        <i id="hamburger-icon" data-lucide="menu" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Mobile Dropdown / Slide-Over Navigation (Hidden by default) -->
+  <div id="mobile-menu" class="md:hidden hidden border-b border-subtle bg-[#131714] shadow-2xl transition-all duration-200">
+    <div class="px-4 py-4 space-y-2">
+      <div class="flex items-center justify-between pb-2 border-b border-[#212823] text-xs font-mono uppercase text-[#738278]">
+        <span>Navigation Menu</span>
+        <button onclick="toggleMobileMenu()" class="p-1 rounded text-[#808d85] hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <nav class="flex flex-col space-y-1 pt-1 text-xs">
+        <button onclick="switchViewMobile('overview')" id="mob-nav-btn-overview" class="mob-nav-btn w-full px-3.5 py-2.5 rounded-lg font-medium transition flex items-center space-x-3 text-emerald-400 bg-[#1c2921] border border-[#27382d]">
+          <i data-lucide="layout-grid" class="w-4 h-4"></i>
+          <span class="text-sm">Overview</span>
+        </button>
+
+        <button onclick="switchViewMobile('assess')" id="mob-nav-btn-assess" class="mob-nav-btn w-full px-3.5 py-2.5 rounded-lg font-medium transition flex items-center space-x-3 text-[#7c8780] hover:text-[#d3ded7] hover:bg-[#1a211d]">
+          <i data-lucide="zap" class="w-4 h-4"></i>
+          <span class="text-sm">Assess an Order</span>
+        </button>
+
+        <button onclick="switchViewMobile('analytics')" id="mob-nav-btn-analytics" class="mob-nav-btn w-full px-3.5 py-2.5 rounded-lg font-medium transition flex items-center space-x-3 text-[#7c8780] hover:text-[#d3ded7] hover:bg-[#1a211d]">
+          <i data-lucide="columns-2" class="w-4 h-4"></i>
+          <span class="text-sm">Model Analytics</span>
+        </button>
+
+        <button onclick="switchViewMobile('mongodb')" id="mob-nav-btn-mongodb" class="mob-nav-btn w-full px-3.5 py-2.5 rounded-lg font-medium transition flex items-center space-x-3 text-[#7c8780] hover:text-[#d3ded7] hover:bg-[#1a211d]">
+          <i data-lucide="database" class="w-4 h-4"></i>
+          <span class="text-sm">MongoDB Order Book</span>
+        </button>
+      </nav>
+
+      <div class="pt-3 border-t border-[#212823] flex items-center justify-between text-[11px] text-[#738278]">
+        <span>Model Snapshot &middot; 28 Oct 2026</span>
+        <span class="text-emerald-400 font-mono">AUC 0.9847</span>
+      </div>
+    </div>
+  </div>
+</header>

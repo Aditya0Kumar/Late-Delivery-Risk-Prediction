@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Environment variables and credentials
+.env
+.env.*
+!.env.example
+*.env
+atlas-credentials.env
+
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Temporary render files
+README.rendered.html

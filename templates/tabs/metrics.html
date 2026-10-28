@@ -1,0 +1,144 @@
+<div id="tab-metrics" class="tab-content hidden space-y-6">
+
+  <!-- Metric Cards Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="glass-card rounded-2xl p-5 border-indigo-500/30">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">ROC-AUC Score</span>
+        <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+          <i data-lucide="award" class="w-4 h-4"></i>
+        </div>
+      </div>
+      <p class="text-3xl font-extrabold text-white mt-2">0.9861</p>
+      <p class="text-[11px] text-emerald-400 mt-1 flex items-center space-x-1">
+        <i data-lucide="check-circle" class="w-3 h-3"></i>
+        <span>Exceptional discriminative power</span>
+      </p>
+    </div>
+
+    <div class="glass-card rounded-2xl p-5">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Weighted Recall</span>
+        <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center">
+          <i data-lucide="target" class="w-4 h-4"></i>
+        </div>
+      </div>
+      <p class="text-3xl font-extrabold text-white mt-2">97.79%</p>
+      <p class="text-[11px] text-slate-400 mt-1">Identifies 19,231/19,658 late orders</p>
+    </div>
+
+    <div class="glass-card rounded-2xl p-5">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">F1-Score</span>
+        <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+          <i data-lucide="zap" class="w-4 h-4"></i>
+        </div>
+      </div>
+      <p class="text-3xl font-extrabold text-white mt-2">0.9779</p>
+      <p class="text-[11px] text-slate-400 mt-1">Balanced precision & recall</p>
+    </div>
+
+    <div class="glass-card rounded-2xl p-5">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Cleaned Dataset</span>
+        <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
+          <i data-lucide="layers" class="w-4 h-4"></i>
+        </div>
+      </div>
+      <p class="text-3xl font-extrabold text-white mt-2">180,508</p>
+      <p class="text-[11px] text-slate-400 mt-1">80% Train (144.7k) / 20% Test (35.8k)</p>
+    </div>
+  </div>
+
+  <!-- Confusion Matrix & Feature Weights -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- Confusion Matrix Visualizer -->
+    <div class="lg:col-span-6 glass-card rounded-2xl p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-base text-white flex items-center space-x-2">
+          <i data-lucide="grid" class="w-4 h-4 text-indigo-400"></i>
+          <span>Test Set Confusion Matrix (35,793 Orders)</span>
+        </h3>
+        <span class="text-xs font-mono text-emerald-400 font-bold">97.8% Accuracy</span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 pt-2">
+        <!-- True Negative -->
+        <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center">
+          <span class="text-[10px] uppercase font-bold text-emerald-400 tracking-wider">True Negatives (TN)</span>
+          <p class="text-2xl font-mono font-bold text-white mt-1">15,772</p>
+          <p class="text-xs text-slate-400 mt-0.5">Correctly classified On-Time (44.1%)</p>
+        </div>
+
+        <!-- False Positive -->
+        <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center">
+          <span class="text-[10px] uppercase font-bold text-amber-400 tracking-wider">False Positives (FP)</span>
+          <p class="text-2xl font-mono font-bold text-white mt-1">363</p>
+          <p class="text-xs text-slate-400 mt-0.5">On-Time predicted as Late (1.0%)</p>
+        </div>
+
+        <!-- False Negative -->
+        <div class="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-center">
+          <span class="text-[10px] uppercase font-bold text-rose-400 tracking-wider">False Negatives (FN)</span>
+          <p class="text-2xl font-mono font-bold text-white mt-1">427</p>
+          <p class="text-xs text-slate-400 mt-0.5">Late missed as On-Time (1.2%)</p>
+        </div>
+
+        <!-- True Positive -->
+        <div class="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-center">
+          <span class="text-[10px] uppercase font-bold text-indigo-400 tracking-wider">True Positives (TP)</span>
+          <p class="text-2xl font-mono font-bold text-white mt-1">19,231</p>
+          <p class="text-xs text-slate-400 mt-0.5">Correctly flagged Late Risk (53.7%)</p>
+        </div>
+      </div>
+
+      <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-xs text-slate-400">
+        <span class="text-slate-300 font-semibold">Key Operational Insight:</span> The model prioritizes recall for late deliveries, successfully catching 97.8% of risky orders so supply chain operators can intervene before the customer is impacted.
+      </div>
+    </div>
+
+    <!-- Feature Coefficients Chart -->
+    <div class="lg:col-span-6 glass-card rounded-2xl p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-base text-white flex items-center space-x-2">
+          <i data-lucide="sliders" class="w-4 h-4 text-cyan-400"></i>
+          <span>PySpark Learned Coefficients</span>
+        </h3>
+        <span class="text-xs text-slate-400">Logistic Regression</span>
+      </div>
+
+      <div class="h-64">
+        <canvas id="coefficientsChart"></canvas>
+      </div>
+
+      <p class="text-xs text-slate-400">
+        Positive coefficients (e.g. <span class="text-rose-400 font-semibold">Days for shipping (real): +9.05</span>) strongly drive late risk, while scheduled days (<span class="text-emerald-400 font-semibold">-7.23</span>) cushion risk.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Correlation Heatmap Viewer -->
+  <div class="glass-card rounded-2xl p-6 space-y-4">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+      <div>
+        <h3 class="font-bold text-base text-white flex items-center space-x-2">
+          <i data-lucide="image" class="w-4 h-4 text-indigo-400"></i>
+          <span>Generated Correlation Heatmap</span>
+        </h3>
+        <p class="text-xs text-slate-400 mt-0.5">Computed across 50,000 sampled records during PySpark pipeline run</p>
+      </div>
+      <a href="/assets/correlation_heatmap.png" target="_blank" class="px-3 py-1.5 rounded-lg bg-indigo-600/20 border border-indigo-500/30 text-indigo-300 hover:bg-indigo-600/30 text-xs font-semibold flex items-center space-x-1.5 transition">
+        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+        <span>Open Full Resolution</span>
+      </a>
+    </div>
+
+    <div class="rounded-xl overflow-hidden border border-slate-800 max-h-[460px] flex items-center justify-center bg-slate-900/50">
+      <img src="/assets/correlation_heatmap.png" alt="Correlation Heatmap" class="w-full object-contain max-h-[460px]">
+    </div>
+  </div>
+
+</div>
+

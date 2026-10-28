@@ -1,0 +1,9 @@
+pyspark>=3.5.0
+numpy
+pandas<3.1
+matplotlib
+seaborn
+python-dotenv
+pymongo
+tqdm
+flask>=3.0.0

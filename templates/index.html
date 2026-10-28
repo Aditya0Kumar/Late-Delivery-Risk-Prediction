@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <!-- View 1: Overview Dashboard (Identical to reference screenshot) -->
+  {% include 'tabs/overview.html' %}
+
+  <!-- View 2: Full-Screen Assess Order Simulator -->
+  {% include 'tabs/assess.html' %}
+
+  <!-- View 3: Model Analytics & Feature Weights -->
+  {% include 'tabs/analytics.html' %}
+
+  <!-- View 4: MongoDB Atlas Order Book Explorer -->
+  {% include 'tabs/mongodb.html' %}
+{% endblock %}

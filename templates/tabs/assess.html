@@ -1,0 +1,241 @@
+<div id="view-assess" class="view-panel hidden space-y-8">
+
+  <!-- Header Section -->
+  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-subtle pb-6">
+    <div>
+      <div class="text-[11px] font-mono tracking-widest text-[#728076] uppercase mb-1">
+        DELIVERY ASSURANCE SCORING &middot; REAL-TIME INFERENCE
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-serif-display text-[#f2f5ef]">
+        Assess an Order
+      </h2>
+      <p class="text-xs text-[#808d85] mt-1">
+        Simulate transit parameters and compute real-time logistic regression late delivery probability.
+      </p>
+    </div>
+
+    <!-- Quick Presets -->
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="text-xs font-mono text-[#738278] uppercase mr-1">Presets:</span>
+      <button onclick="loadPreset('high_risk')" class="px-3 py-1.5 rounded-lg bg-[#2d1b1d] border border-[#52252a] text-[#f87171] hover:bg-[#3d2024] text-xs transition font-medium">
+        &bull; High Risk Order
+      </button>
+      <button onclick="loadPreset('on_time')" class="px-3 py-1.5 rounded-lg bg-[#182a20] border border-[#274b37] text-[#34d399] hover:bg-[#1e3829] text-xs transition font-medium">
+        &bull; On-Time Standard
+      </button>
+      <button onclick="loadPreset('first_class')" class="px-3 py-1.5 rounded-lg bg-[#182329] border border-[#214352] text-[#38bdf8] hover:bg-[#1e303a] text-xs transition font-medium">
+        &bull; Rush First Class
+      </button>
+    </div>
+  </div>
+
+  <!-- Two Column Layout (Full Screen / Wide View) -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <!-- Left Column: Parameters & Form (7 Cols) -->
+    <div class="lg:col-span-7 bg-card-dark border border-card rounded-xl p-6 sm:p-7 space-y-6">
+      <div class="flex items-center justify-between border-b border-[#212823] pb-3">
+        <h3 class="text-base font-serif-display text-[#f2f5ef] flex items-center space-x-2">
+          <span>Order & Transit Parameters</span>
+        </h3>
+        <span class="text-xs font-mono text-[#738278]">12 ML Input Features</span>
+      </div>
+
+      <form id="prediction-form" onsubmit="event.preventDefault(); triggerPrediction();" class="space-y-5">
+        <!-- Sliders -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-[#171d19] border border-[#26312a]">
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-xs text-[#c4ceca] font-medium">Days for Shipping (Real)</label>
+              <span id="days_real_val" class="text-xs font-mono font-bold text-emerald-400 bg-[#14231b] px-2 py-0.5 rounded border border-[#234231]">3 days</span>
+            </div>
+            <input type="range" id="days_real" min="0" max="6" step="1" value="3" oninput="updateRangeVal('days_real', ' days'); liveSimulate();" class="w-full accent-emerald-500 cursor-pointer">
+            <span class="text-[10px] text-[#738278]">Carrier transit elapsed duration</span>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-xs text-[#c4ceca] font-medium">Days for Shipment (Scheduled)</label>
+              <span id="days_scheduled_val" class="text-xs font-mono font-bold text-emerald-400 bg-[#14231b] px-2 py-0.5 rounded border border-[#234231]">4 days</span>
+            </div>
+            <input type="range" id="days_scheduled" min="0" max="6" step="1" value="4" oninput="updateRangeVal('days_scheduled', ' days'); liveSimulate();" class="w-full accent-emerald-500 cursor-pointer">
+            <span class="text-[10px] text-[#738278]">Promised delivery window</span>
+          </div>
+        </div>
+
+        <!-- Dropdowns Row 1 -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <div>
+            <label class="block text-xs text-[#8a9990] mb-1.5">Shipping Mode</label>
+            <select id="shipping_mode" onchange="liveSimulate();" class="input-dark w-full rounded-lg px-3 py-2 text-xs">
+              <option value="Standard Class">Standard Class</option>
+              <option value="Second Class">Second Class</option>
+              <option value="First Class">First Class</option>
+              <option value="Same Day">Same Day</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs text-[#8a9990] mb-1.5">Order Status</label>
+            <select id="order_status" onchange="liveSimulate();" class="input-dark w-full rounded-lg px-3 py-2 text-xs">
+              <option value="COMPLETE">COMPLETE</option>
+              <option value="PENDING_PAYMENT">PENDING_PAYMENT</option>
+              <option value="PROCESSING">PROCESSING</option>
+              <option value="PENDING">PENDING</option>
+              <option value="CLOSED">CLOSED</option>
+              <option value="ON_HOLD">ON_HOLD</option>
+              <option value="SUSPECTED_FRAUD">SUSPECTED_FRAUD</option>
+              <option value="CANCELED">CANCELED</option>
+              <option value="PAYMENT_REVIEW">PAYMENT_REVIEW</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs text-[#8a9990] mb-1.5">Payment Type</label>
+            <select id="type" onchange="liveSimulate();" class="input-dark w-full rounded-lg px-3 py-2 text-xs">
+              <option value="DEBIT">DEBIT</option>
+              <option value="TRANSFER">TRANSFER</option>
+              <option value="PAYMENT">PAYMENT</option>
+              <option value="CASH">CASH</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Dropdowns Row 2 -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <div>
+            <label class="block text-xs text-[#8a9990] mb-1.5">Customer Segment</label>
+            <select id="segment" onchange="liveSimulate();" class="input-dark w-full rounded-lg px-3 py-2 text-xs">
+              <option value="Consumer">Consumer</option>
+              <option value="Corporate">Corporate</option>
+              <option value="Home Office">Home Office</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs text-[#8a9990] mb-1.5">Customer City</label>
+            <select id="city" onchange="liveSimulate();" class="input-dark w-full rounded-lg px-3 py-2 text-xs">
+              <option value="Caguas">Caguas</option>
+              <option value="Chicago">Chicago</option>
+              <option value="Los Angeles">Los Angeles</option>
+              <option value="Brooklyn">Brooklyn</option>
+              <option value="New York">New York</option>
+              <option value="Philadelphia">Philadelphia</option>
+              <option value="Houston">Houston</option>
+              <option value="San Diego">San Diego</option>
+              <option value="Dallas">Dallas</option>
+              <option value="Miami">Miami</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs text-[#8a9990] mb-1.5">Customer State</label>
+            <select id="state" onchange="liveSimulate();" class="input-dark w-full rounded-lg px-3 py-2 text-xs">
+              <option value="PR">PR (Puerto Rico)</option>
+              <option value="CA">CA (California)</option>
+              <option value="NY">NY (New York)</option>
+              <option value="TX">TX (Texas)</option>
+              <option value="IL">IL (Illinois)</option>
+              <option value="FL">FL (Florida)</option>
+              <option value="PA">PA (Pennsylvania)</option>
+              <option value="OH">OH (Ohio)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Numerics Row 3 -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <div>
+            <label class="block text-xs text-[#8a9990] mb-1.5">Item Quantity</label>
+            <input type="number" id="quantity" value="1" min="1" max="10" oninput="liveSimulate();" class="input-dark w-full rounded-lg px-3 py-2 text-xs">
+          </div>
+
+          <div>
+            <label class="block text-xs text-[#8a9990] mb-1.5">Department ID</label>
+            <input type="number" id="department_id" value="2" min="1" max="12" oninput="liveSimulate();" class="input-dark w-full rounded-lg px-3 py-2 text-xs">
+          </div>
+
+          <div>
+            <label class="block text-xs text-[#8a9990] mb-1.5">Customer Zipcode</label>
+            <input type="number" id="zipcode" value="725" oninput="liveSimulate();" class="input-dark w-full rounded-lg px-3 py-2 text-xs">
+          </div>
+        </div>
+
+        <div class="pt-3 flex items-center justify-between border-t border-[#212823]">
+          <label class="flex items-center space-x-2 text-xs text-[#7e8c83] cursor-pointer">
+            <input type="checkbox" id="auto-predict" checked class="rounded accent-emerald-500">
+            <span>Instant calculate on change</span>
+          </label>
+          <button type="submit" class="btn-primary-green px-5 py-2.5 rounded-lg text-xs font-semibold shadow">
+            Compute Probability
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column: Diagnostics & Results (5 Cols) -->
+    <div class="lg:col-span-5 space-y-6">
+
+      <!-- Diagnostic Score Card -->
+      <div id="risk-result-card" class="bg-card-dark border border-card rounded-xl p-6 sm:p-7 space-y-5">
+        <div class="flex items-center justify-between">
+          <span class="text-[11px] font-mono tracking-widest text-[#7e8c83] uppercase">RISK ASSESSMENT</span>
+          <span id="risk-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#1b3829] text-emerald-300 border border-[#26533c]">
+            ON-TIME EXPECTED
+          </span>
+        </div>
+
+        <div class="flex items-baseline justify-between pt-1">
+          <div>
+            <div class="inline-flex items-baseline space-x-1">
+              <span id="risk-percentage" class="text-5xl font-serif-display text-white">0.0</span>
+              <span class="text-2xl font-serif-display text-[#7e8c83]">%</span>
+            </div>
+            <p id="risk-status-text" class="text-xs text-[#a0aca3] mt-1 font-medium">Order On Schedule for Timely Delivery</p>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] text-[#7e8c83] uppercase font-mono">Logit Score (z)</span>
+            <p id="logit-z" class="text-xl font-mono font-bold text-[#f2f5ef]">-7.996</p>
+          </div>
+        </div>
+
+        <div class="w-full bg-[#1b231e] rounded-full h-2 overflow-hidden">
+          <div id="risk-progress-bar" class="h-full bg-emerald-500 transition-all duration-300" style="width: 0%"></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-xs border-t border-[#212823] pt-3 text-center">
+          <div>
+            <span class="text-[#728076]">Decision Threshold</span>
+            <p class="font-mono text-slate-300 mt-0.5">p &ge; 0.50</p>
+          </div>
+          <div>
+            <span class="text-[#728076]">Risk Severity</span>
+            <p id="risk-severity" class="font-bold text-emerald-400 mt-0.5">Low Risk</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Drivers -->
+      <div class="bg-card-dark border border-card rounded-xl p-6 space-y-3">
+        <h4 class="text-xs font-mono tracking-wider text-[#738278] uppercase flex items-center space-x-1.5">
+          <i data-lucide="git-commit" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>Top Log-Odds Risk Drivers</span>
+        </h4>
+        <div id="feature-contributions-list" class="space-y-2"></div>
+      </div>
+
+      <!-- Action Items -->
+      <div class="bg-card-dark border border-card rounded-xl p-6 space-y-3">
+        <h4 class="text-xs font-mono tracking-wider text-[#738278] uppercase flex items-center space-x-1.5">
+          <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>Recommended Mitigation Actions</span>
+        </h4>
+        <ul id="recommendations-list" class="space-y-2 text-xs text-[#9fb0a5]"></ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+

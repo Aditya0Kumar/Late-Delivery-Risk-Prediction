@@ -1,0 +1,158 @@
+<div id="view-overview" class="view-panel space-y-8">
+
+  <!-- HERO SECTION -->
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pt-2">
+    <div>
+      <div class="text-[11px] font-mono tracking-widest text-[#728076] uppercase mb-3">
+        SUPPLY CHAIN / DELIVERY ASSURANCE
+      </div>
+      <h1 class="text-4xl sm:text-5xl lg:text-[54px] leading-[1.08] font-serif-display font-normal text-[#f2f5ef] tracking-tight">
+        See delays before<br>they happen.
+      </h1>
+      <p class="text-sm sm:text-base text-[#808d85] mt-3">
+        A working view of delivery risk across the order book.
+      </p>
+    </div>
+
+    <!-- CTA Button -->
+    <div class="shrink-0">
+      <button onclick="switchView('assess')" class="btn-primary-green px-5 py-2.5 rounded-lg text-sm font-medium flex items-center space-x-2 shadow-sm">
+        <span class="text-base font-normal leading-none">+</span>
+        <span>Assess an order</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- STATS GRID (4 Columns separated by subtle borders) -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-6 border-t border-subtle">
+    <!-- Col 1 -->
+    <div class="space-y-1.5 pr-4 border-b sm:border-b-0 sm:border-r border-subtle pb-4 sm:pb-0">
+      <div class="text-[11px] font-mono tracking-widest text-[#738278] uppercase">
+        ORDERS MONITORED
+      </div>
+      <div class="text-3xl sm:text-4xl font-serif-display text-[#f2f5ef] pt-1">
+        180,519
+      </div>
+      <div class="text-xs text-[#808d85]">
+        DataCo dataset &middot; 53 fields
+      </div>
+    </div>
+
+    <!-- Col 2 -->
+    <div class="space-y-1.5 pr-4 border-b sm:border-b-0 lg:border-r border-subtle pb-4 sm:pb-0">
+      <div class="text-[11px] font-mono tracking-widest text-[#738278] uppercase">
+        FLAGGED AT RISK
+      </div>
+      <div class="text-3xl sm:text-4xl font-serif-display text-[#f2f5ef] pt-1">
+        56.7<span class="text-2xl font-sans">%</span>
+      </div>
+      <div class="text-xs text-[#808d85] flex items-center">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#d97706] mr-1.5"></span>
+        <span class="text-[#d97706]">Elevated exposure</span>&nbsp;in sample data
+      </div>
+    </div>
+
+    <!-- Col 3 -->
+    <div class="space-y-1.5 pr-4 border-b sm:border-b-0 sm:border-r border-subtle pb-4 sm:pb-0">
+      <div class="text-[11px] font-mono tracking-widest text-[#738278] uppercase">
+        MODEL AUC
+      </div>
+      <div class="text-3xl sm:text-4xl font-serif-display text-[#f2f5ef] pt-1">
+        0.9847
+      </div>
+      <div class="text-xs text-[#808d85]">
+        Reported test-set result
+      </div>
+    </div>
+
+    <!-- Col 4 -->
+    <div class="space-y-1.5">
+      <div class="text-[11px] font-mono tracking-widest text-[#738278] uppercase">
+        MODEL F1 SCORE
+      </div>
+      <div class="text-3xl sm:text-4xl font-serif-display text-[#f2f5ef] pt-1">
+        0.9775
+      </div>
+      <div class="text-xs text-[#808d85]">
+        Reported test-set result
+      </div>
+    </div>
+  </div>
+
+  <!-- DELIVERY PERFORMANCE CARD -->
+  <div class="bg-card-dark border border-card rounded-xl p-6 sm:p-7 relative overflow-hidden space-y-6">
+    <!-- Card Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-serif-display text-[#f2f5ef]">
+          Delivery performance
+        </h2>
+        <p class="text-xs text-[#7e8c83] mt-0.5">
+          Illustrative weekly trend &middot; sample visualization
+        </p>
+      </div>
+
+      <!-- Dropdown -->
+      <div>
+        <select class="bg-[#171d19] border border-[#26312a] text-[#c4ceca] text-xs rounded-lg px-3 py-1.5 pr-8 focus:outline-none focus:border-emerald-500 cursor-pointer">
+          <option>Last 8 weeks</option>
+          <option>Last 12 weeks</option>
+          <option>Year to date</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Performance Line Chart -->
+    <div class="w-full h-44 sm:h-52 relative">
+      <canvas id="weeklyPerformanceChart"></canvas>
+    </div>
+
+    <!-- Downward expander button -->
+    <div class="flex justify-center pt-2">
+      <button onclick="scrollToDetails()" title="View Model Intelligence & Orders" class="w-8 h-8 rounded-full bg-[#1b231e] border border-[#2b3930] hover:border-[#3d5245] hover:bg-[#212b25] flex items-center justify-center text-[#9db2a5] transition shadow">
+        <i data-lucide="arrow-down" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- LOWER EXTENSION: Quick Summary Highlights -->
+  <div id="details-section" class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+    <!-- Card 1 -->
+    <div class="bg-card-dark border border-card rounded-xl p-5 space-y-3">
+      <div class="flex items-center space-x-2 text-xs font-mono text-[#738278] uppercase">
+        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+        <span>Early Intervention</span>
+      </div>
+      <h3 class="text-base font-serif-display text-[#f2f5ef]">Catch 97.8% of Late Deliveries</h3>
+      <p class="text-xs text-[#808d85] leading-relaxed">
+        With 19,231 true positive identifications in testing, the logistic model isolates high-risk packages days before the promised delivery window expires.
+      </p>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-card-dark border border-card rounded-xl p-5 space-y-3">
+      <div class="flex items-center space-x-2 text-xs font-mono text-[#738278] uppercase">
+        <i data-lucide="git-branch" class="w-4 h-4 text-cyan-400"></i>
+        <span>PySpark 4.2 Pipeline</span>
+      </div>
+      <h3 class="text-base font-serif-display text-[#f2f5ef]">Distributed Scale</h3>
+      <p class="text-xs text-[#808d85] leading-relaxed">
+        Categorical StringIndexing, OneHotEncoding, and StandardScaling process all 180,519 supply chain orders across multi-core Spark workers.
+      </p>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-card-dark border border-card rounded-xl p-5 space-y-3">
+      <div class="flex items-center space-x-2 text-xs font-mono text-[#738278] uppercase">
+        <i data-lucide="database" class="w-4 h-4 text-indigo-400"></i>
+        <span>MongoDB Atlas Layer</span>
+      </div>
+      <h3 class="text-base font-serif-display text-[#f2f5ef]">Live Ingested Order Book</h3>
+      <p class="text-xs text-[#808d85] leading-relaxed">
+        Active cloud storage in <span class="font-mono text-slate-300">Regression_loogistic.preprocessing</span> ensures data availability across analytical layers.
+      </p>
+    </div>
+  </div>
+
+</div>
+

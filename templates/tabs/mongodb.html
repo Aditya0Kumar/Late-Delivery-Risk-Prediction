@@ -1,0 +1,75 @@
+<div id="view-mongodb" class="view-panel hidden space-y-8">
+
+  <!-- Header -->
+  <div>
+    <div class="text-[11px] font-mono tracking-widest text-[#728076] uppercase mb-1">
+      DATA INFRASTRUCTURE / STORAGE
+    </div>
+    <h2 class="text-3xl font-serif-display text-[#f2f5ef]">
+      MongoDB Atlas Order Book
+    </h2>
+    <p class="text-xs text-[#808d85] mt-1">
+      Ingested data storage hosted on MongoDB Atlas cluster <span class="font-mono text-slate-300">late-prediction.gqirgaw.mongodb.net</span>.
+    </p>
+  </div>
+
+  <!-- Status Summary Card -->
+  <div class="bg-card-dark border border-card rounded-xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="flex items-center space-x-4">
+      <div class="w-10 h-10 rounded-lg bg-[#18291f] border border-[#274b37] flex items-center justify-center text-emerald-400">
+        <i data-lucide="database" class="w-5 h-5"></i>
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <span class="text-base font-serif-display text-white">Cloud Cluster Status:</span>
+          <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-[#18291f] text-emerald-400 border border-[#274b37]">
+            ONLINE
+          </span>
+        </div>
+        <p class="text-xs text-[#808d85] mt-0.5">Database: <span class="font-mono text-slate-300">Regression_loogistic</span> &middot; Collection: <span class="font-mono text-slate-300">preprocessing</span></p>
+      </div>
+    </div>
+
+    <div>
+      <span class="text-[11px] font-mono tracking-wider text-[#738278] uppercase">INGESTED DOCUMENTS</span>
+      <p class="text-3xl font-serif-display text-emerald-400">180,519</p>
+    </div>
+  </div>
+
+  <!-- Sample Orders Table -->
+  <div class="bg-card-dark border border-card rounded-xl p-6 space-y-4">
+    <div class="flex items-center justify-between border-b border-[#212823] pb-3">
+      <div>
+        <h3 class="text-base font-serif-display text-[#f2f5ef]">Live Ingested Documents</h3>
+        <p class="text-xs text-[#808d85]">Direct query from collection</p>
+      </div>
+      <button onclick="fetchMongoSamples();" class="px-3 py-1.5 rounded-lg border border-[#26312a] text-xs text-[#9fb0a5] hover:text-white transition flex items-center space-x-1.5">
+        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+        <span>Refresh</span>
+      </button>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs text-[#c4ceca]">
+        <thead class="bg-[#171d19] text-[#738278] uppercase text-[10px] font-mono border-b border-[#212823]">
+          <tr>
+            <th class="py-2.5 px-3">Type</th>
+            <th class="py-2.5 px-3">Real Days</th>
+            <th class="py-2.5 px-3">Sched Days</th>
+            <th class="py-2.5 px-3">Delivery Status</th>
+            <th class="py-2.5 px-3">Shipping Mode</th>
+            <th class="py-2.5 px-3">Destination</th>
+            <th class="py-2.5 px-3">Sales</th>
+            <th class="py-2.5 px-3">Late Risk</th>
+          </tr>
+        </thead>
+        <tbody id="mongo-samples-body" class="divide-y divide-[#1e2520] font-mono text-[11px]">
+          <tr>
+            <td colspan="8" class="text-center py-6 text-[#738278] font-sans">Connecting to MongoDB Atlas...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

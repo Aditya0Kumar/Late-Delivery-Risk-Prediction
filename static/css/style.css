@@ -1,0 +1,89 @@
+/* Custom styles matching the executive editorial theme */
+
+:root {
+  --bg-main: #111412;
+  --bg-sidebar: #131714;
+  --bg-card: #151916;
+  --border-subtle: #212823;
+  --border-card: #232b25;
+  --green-accent: #23543f;
+  --green-hover: #2c684e;
+  --green-text: #34d399;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: #eaede8;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+}
+
+.font-serif-display {
+  font-family: 'Newsreader', 'Playfair Display', Georgia, serif;
+}
+
+.bg-app-dark {
+  background-color: var(--bg-main);
+}
+
+.bg-sidebar-dark {
+  background-color: var(--bg-sidebar);
+}
+
+.bg-card-dark {
+  background-color: var(--bg-card);
+}
+
+.border-subtle {
+  border-color: var(--border-subtle);
+}
+
+.border-card {
+  border-color: var(--border-card);
+}
+
+.btn-primary-green {
+  background-color: var(--green-accent);
+  color: #ffffff;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-primary-green:hover {
+  background-color: var(--green-hover);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #111412;
+}
+::-webkit-scrollbar-thumb {
+  background: #232b25;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2e3a32;
+}
+
+/* Modal / Drawer Transitions */
+.drawer-backdrop {
+  background: rgba(8, 10, 9, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+/* Form Inputs */
+.input-dark {
+  background-color: #171c19;
+  border: 1px solid #232b25;
+  color: #eaede8;
+  transition: border-color 0.15s;
+}
+
+.input-dark:focus {
+  outline: none;
+  border-color: #34d399;
+  box-shadow: 0 0 0 1px #34d399;
+}
