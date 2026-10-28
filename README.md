@@ -17,15 +17,15 @@ Project topic: **Logistic Regression for Supply Chain Late Delivery Risk Predict
 
 | Category | Tools |
 |---|---|
-| Programming | Python |
-| Big Data Processing | PySpark, Spark SQL |
-| Machine Learning | Spark MLlib, Logistic Regression |
+| Programming | Python 3.14 / 3.10+ |
+| Big Data Processing | PySpark 4.2, Spark SQL |
+| Machine Learning | Spark MLlib (Logistic Regression, VectorAssembler, StandardScaler) |
+| Web Application | Flask, Jinja2 Templates, REST APIs |
+| UI & Visualization | Tailwind CSS, Chart.js, Lucide Icons, Matplotlib, Seaborn |
 | Data Analysis | Pandas, NumPy |
-| Visualization | Matplotlib, Seaborn |
-| Data Storage | MongoDB Atlas |
-| Environment | Google Colab |
-| Dataset Source | Kaggle |
-| Reporting | PDF report, PowerPoint presentation |
+| Data Storage | MongoDB Atlas (`Regression_loogistic.preprocessing`) |
+| Interactive Notebooks | Google Colab, Jupyter Notebook |
+| Dataset Source | Kaggle (DataCo Global Supply Chain) |
 
 ![Project Pipeline](assets/readme/pipeline-diagram.jpg)
 
@@ -44,6 +44,7 @@ Project topic: **Logistic Regression for Supply Chain Late Delivery Risk Predict
 - [Modeling Approach](#modeling-approach)
 - [Results](#results)
 - [Key Insights](#key-insights)
+- [Interactive Web Application & Executive Dashboard](#interactive-web-application--executive-dashboard)
 - [How to Run](#how-to-run)
 - [Project Screenshots](#project-screenshots)
 
@@ -151,16 +152,36 @@ The project ingestion process uses:
 
 ```text
 .
-├── Building a logistic Regression Model .pdf       # Project report
-├── DataCoSupplyChainDataset.csv                    # Dataset
-├── Ingestion.ipynb                                 # Dataset download and MongoDB ingestion notebook
-├── Picture1.jpg                                    # Data pipeline diagram
-├── Pyspark_Logistic_Regression_model.ipynb         # Main PySpark modeling notebook
-├── REGRESSION-presentation.pptx                    # Project presentation
-├── pyspark_logistic_regression_model.py            # Python export of modeling notebook
-├── README.md                                       # Project documentation
-└── assets/
-    └── readme/                                     # Images extracted for README
+├── DataCoSupplyChainDataset.csv                    # Dataset (180,519 records, 53 columns)
+├── Ingestion.ipynb                                 # MongoDB Atlas data ingestion notebook
+├── Pyspark_Logistic_Regression_model.ipynb         # Interactive PySpark modeling notebook
+├── pyspark_logistic_regression_model.py            # Standalone PySpark ML pipeline script
+├── app.py                                          # Flask backend & REST APIs
+├── model_metadata.json                             # Exported model weights, scaler & category maps
+├── requirements.txt                                # Pinned Python dependencies
+├── static/                                         # Frontend static assets
+│   ├── css/
+│   │   └── style.css                               # Executive dark theme & custom styling
+│   └── js/
+│       ├── app.js                                  # Global navigation, mobile drawer & state
+│       ├── charts.js                               # Delivery trend & coefficient charts
+│       ├── predictor.js                            # Form handling & real-time risk diagnostics
+│       └── mongo.js                                # Live MongoDB Atlas sample order loader
+├── templates/                                      # Modular Jinja2 templates
+│   ├── base.html                                   # Master HTML5 skeleton layout
+│   ├── index.html                                  # Central view container
+│   ├── components/
+│   │   ├── header.html                             # Responsive top navbar with hamburger menu
+│   │   └── footer.html                             # Minimalist footer
+│   └── tabs/
+│       ├── overview.html                           # Executive Operations overview dashboard
+│       ├── assess.html                             # Full-screen order risk simulator
+│       ├── analytics.html                          # Model diagnostics & confusion matrix
+│       └── mongodb.html                            # MongoDB Atlas order book explorer
+├── assets/
+│   ├── correlation_heatmap.png                     # Generated feature correlation matrix
+│   └── readme/                                     # Architecture diagrams & figures
+└── README.md                                       # Comprehensive project documentation
 ```
 
 ---
@@ -385,7 +406,38 @@ Interpretation:
 
 ---
 
-## How to Run
+## Interactive Web Application & Executive Dashboard
+
+The repository includes a modern, production-ready web application built with **Flask**, **Tailwind CSS**, and **Chart.js** that exposes the PySpark machine learning pipeline through an executive operational interface.
+
+### Key Capabilities
+
+1. **Operations Overview (`/`)**:
+   - Executive dark & forest green theme designed for logistics control towers.
+   - Summary cards displaying **180,519** monitored orders, **56.7%** risk exposure, **0.9847** AUC, and **0.9775** F1-score.
+   - Interactive weekly delivery performance trend visualization.
+
+2. **Full-Screen Order Risk Assessor (`Assess Order`)**:
+   - **Sub-millisecond Real-Time Inference**: Evaluates the learned PySpark logistic regression weights and standardizer parameters (`model_metadata.json`) without JVM latency.
+   - **Dynamic Risk Gauge**: Displays instant late delivery risk percentage, logit score ($z$), and severity level (`ON-TIME EXPECTED` vs `LATE RISK DETECTED`).
+   - **Feature Driver Breakdown**: Visualizes the exact log-odds contribution of each feature to the prediction.
+   - **Actionable Mitigation Recommendations**: Automatically outputs logistical actions (priority re-routing, carrier escalation, automated customer notifications).
+   - **Interactive What-If Sliders & One-Click Presets**: Test standard orders, rush first class, or high-risk delays with live slider recalculation.
+
+3. **Model Intelligence & Analytics (`Model Analytics`)**:
+   - Out-of-sample confusion matrix visualizer (35,793 test orders).
+   - Horizontal bar chart of learned PySpark feature coefficients (positive risk drivers vs negative risk cushions).
+   - Embedded high-resolution correlation matrix heatmap viewer (`assets/correlation_heatmap.png`).
+
+4. **MongoDB Atlas Cloud Hub (`Order Book`)**:
+   - Live cluster connection monitor to `late-prediction.gqirgaw.mongodb.net`.
+   - Real-time order table querying documents directly from `Regression_loogistic.preprocessing` (180,519 documents).
+
+5. **Responsive Navigation**:
+   - Clean top navbar pills on desktop screens.
+   - Responsive hamburger menu (`☰`) with animated cross toggle (`✕`) on tablets and mobile screens.
+
+---
 
 ### 1. Clone the repository
 
