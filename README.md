@@ -280,9 +280,9 @@ Shipping Mode
 
 ### 6. Feature Engineering
 
-Correlation analysis is used to identify highly correlated and redundant features.
+Correlation analysis is used to identify highly correlated and redundant features across the 180,519 order records.
 
-![Feature Engineering Report Page](assets/readme/pdf-page-6.png)
+![Feature Correlation Matrix Heatmap](assets/correlation_heatmap.png)
 
 The project removes or avoids duplicated information between fields such as:
 
@@ -410,6 +410,8 @@ Interpretation:
 
 The repository includes a modern, production-ready web application built with **Flask**, **Tailwind CSS**, and **Chart.js** that exposes the PySpark machine learning pipeline through an executive operational interface.
 
+![Executive Delivery Assurance Dashboard](assets/readme/web-dashboard.png)
+
 ### Key Capabilities
 
 1. **Operations Overview (`/`)**:
@@ -438,6 +440,8 @@ The repository includes a modern, production-ready web application built with **
    - Responsive hamburger menu (`☰`) with animated cross toggle (`✕`) on tablets and mobile screens.
 
 ---
+
+## How to Run
 
 ### 1. Clone the repository
 
@@ -509,7 +513,19 @@ Open your browser at: `http://127.0.0.1:5000`
 
 ## Project Screenshots
 
-### Dataset Overview
+### Executive Operations Dashboard
+
+![Executive Operations Dashboard](assets/readme/web-dashboard.png)
+
+### Real-Time Order Risk Assessor
+
+![Full-Screen Order Risk Assessor](assets/readme/order-assessor.png)
+
+### PySpark Feature Correlation Heatmap
+
+![Feature Correlation Matrix](assets/correlation_heatmap.png)
+
+### Dataset Overview & Architecture
 
 ![Dataset Columns](assets/readme/ppt-image-12.png)
 
