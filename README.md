@@ -244,7 +244,7 @@ from pymongo import MongoClient
 import pandas as pd
 
 client = MongoClient(MONGO_URI)
-db = client["Regression_logistic"]
+db = client["Regression_loogistic"]
 collection = db["preprocessing"]
 
 df = pd.read_csv("DataCoSupplyChainDataset.csv", encoding="latin1")
