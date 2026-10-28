@@ -1,7 +1,7 @@
 <div id="view-assess" class="view-panel hidden space-y-8">
 
   <!-- Header Section -->
-  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-subtle pb-6">
+  <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4 border-b border-subtle pb-6">
     <div>
       <div class="text-[11px] font-mono tracking-widest text-[#728076] uppercase mb-1">
         DELIVERY ASSURANCE SCORING &middot; REAL-TIME INFERENCE
@@ -10,22 +10,34 @@
         Assess an Order
       </h2>
       <p class="text-xs text-[#808d85] mt-1">
-        Simulate transit parameters and compute real-time logistic regression late delivery probability.
+        Simulate transit parameters and compute real-time PySpark logistic regression late delivery probability.
       </p>
     </div>
 
-    <!-- Quick Presets -->
-    <div class="flex flex-wrap items-center gap-2">
-      <span class="text-xs font-mono text-[#738278] uppercase mr-1">Presets:</span>
-      <button onclick="loadPreset('high_risk')" class="px-3 py-1.5 rounded-lg bg-[#2d1b1d] border border-[#52252a] text-[#f87171] hover:bg-[#3d2024] text-xs transition font-medium">
-        &bull; High Risk Order
-      </button>
-      <button onclick="loadPreset('on_time')" class="px-3 py-1.5 rounded-lg bg-[#182a20] border border-[#274b37] text-[#34d399] hover:bg-[#1e3829] text-xs transition font-medium">
-        &bull; On-Time Standard
-      </button>
-      <button onclick="loadPreset('first_class')" class="px-3 py-1.5 rounded-lg bg-[#182329] border border-[#214352] text-[#38bdf8] hover:bg-[#1e303a] text-xs transition font-medium">
-        &bull; Rush First Class
-      </button>
+    <!-- Inference Mode & Presets -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <!-- Mode Segmented Control -->
+      <div class="flex items-center bg-[#151a17] border border-[#26312a] p-1 rounded-xl">
+        <button id="mode-btn-full" type="button" onclick="setInferenceMode('full')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition bg-[#214e3b] text-[#f2f5ef] shadow-sm">
+          Post-Transit (Full)
+        </button>
+        <button id="mode-btn-pre" type="button" onclick="setInferenceMode('pre_dispatch')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition text-[#7e8c83] hover:text-[#d3ded7]">
+          Pre-Dispatch (Intake SLA)
+        </button>
+      </div>
+
+      <!-- Quick Presets -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="loadPreset('high_risk')" class="px-3 py-1.5 rounded-lg bg-[#2d1b1d] border border-[#52252a] text-[#f87171] hover:bg-[#3d2024] text-xs transition font-medium">
+          &bull; High Risk
+        </button>
+        <button onclick="loadPreset('on_time')" class="px-3 py-1.5 rounded-lg bg-[#182a20] border border-[#274b37] text-[#34d399] hover:bg-[#1e3829] text-xs transition font-medium">
+          &bull; On-Time
+        </button>
+        <button onclick="loadPreset('first_class')" class="px-3 py-1.5 rounded-lg bg-[#182329] border border-[#214352] text-[#38bdf8] hover:bg-[#1e303a] text-xs transition font-medium">
+          &bull; Rush 1st Class
+        </button>
+      </div>
     </div>
   </div>
 
@@ -38,19 +50,25 @@
         <h3 class="text-base font-serif-display text-[#f2f5ef] flex items-center space-x-2">
           <span>Order & Transit Parameters</span>
         </h3>
-        <span class="text-xs font-mono text-[#738278]">12 ML Input Features</span>
+        <span id="feature-count-badge" class="text-xs font-mono text-emerald-400 bg-[#14231b] px-2.5 py-0.5 rounded border border-[#234b34]">12 ML Input Features</span>
+      </div>
+
+      <!-- Pre-Dispatch Notification Banner -->
+      <div id="pre-dispatch-banner" class="hidden p-3 rounded-xl bg-[#14231b] border border-[#234b34] text-xs text-[#8ee3b9] flex items-center space-x-2.5">
+        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+        <span><strong>Pre-Dispatch Intake Mode Active:</strong> Scoring order prior to carrier dispatch with zero transit leakage (11 features &bull; AUC 0.7288). Real shipping time is omitted.</span>
       </div>
 
       <form id="prediction-form" onsubmit="event.preventDefault(); triggerPrediction();" class="space-y-5">
         <!-- Sliders -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-[#171d19] border border-[#26312a]">
-          <div>
+          <div id="days-real-container" class="transition-all duration-200">
             <div class="flex justify-between items-center mb-1">
               <label class="text-xs text-[#c4ceca] font-medium">Days for Shipping (Real)</label>
               <span id="days_real_val" class="text-xs font-mono font-bold text-emerald-400 bg-[#14231b] px-2 py-0.5 rounded border border-[#234231]">3 days</span>
             </div>
             <input type="range" id="days_real" min="0" max="6" step="1" value="3" oninput="updateRangeVal('days_real', ' days'); liveSimulate();" class="w-full accent-emerald-500 cursor-pointer">
-            <span class="text-[10px] text-[#738278]">Carrier transit elapsed duration</span>
+            <span id="days_real_hint" class="text-[10px] text-[#738278]">Carrier transit elapsed duration</span>
           </div>
 
           <div>
@@ -179,7 +197,10 @@
       <!-- Diagnostic Score Card -->
       <div id="risk-result-card" class="bg-card-dark border border-card rounded-xl p-6 sm:p-7 space-y-5">
         <div class="flex items-center justify-between">
-          <span class="text-[11px] font-mono tracking-widest text-[#7e8c83] uppercase">RISK ASSESSMENT</span>
+          <div class="flex items-center space-x-2">
+            <span class="text-[11px] font-mono tracking-widest text-[#7e8c83] uppercase">RISK ASSESSMENT</span>
+            <span id="active-mode-badge" class="text-[10px] font-mono text-emerald-400 bg-[#14231b] px-2 py-0.5 rounded border border-[#234b34]">Post-Transit</span>
+          </div>
           <span id="risk-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#1b3829] text-emerald-300 border border-[#26533c]">
             ON-TIME EXPECTED
           </span>

@@ -247,5 +247,98 @@
       "false_negatives": 427,
       "true_positives": 19231
     }
+  },
+  "model_comparison": [
+    {
+      "name": "Logistic Regression (Full)",
+      "type": "Linear / Probabilistic",
+      "features_count": 12,
+      "leakage_risk": "High (uses real days)",
+      "auc": 0.9851,
+      "recall": 0.9765,
+      "f1": 0.9765,
+      "accuracy": 0.9765,
+      "train_time_sec": 51.3,
+      "best_for": "Post-dispatch audit & monitoring"
+    },
+    {
+      "name": "Random Forest Classifier",
+      "type": "Ensemble (20 Trees, Depth 7)",
+      "features_count": 12,
+      "leakage_risk": "High (uses real days)",
+      "auc": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "train_time_sec": 10.7,
+      "best_for": "Non-linear pattern recognition"
+    },
+    {
+      "name": "Pre-Dispatch Model (Zero Leakage)",
+      "type": "Linear / Production Intake",
+      "features_count": 11,
+      "leakage_risk": "Zero (strictly intake data)",
+      "auc": 0.7288,
+      "recall": 0.6923,
+      "f1": 0.69,
+      "accuracy": 0.6923,
+      "train_time_sec": 5.8,
+      "best_for": "Order placement / Warehouse dispatch"
+    }
+  ],
+  "pre_dispatch": {
+    "features": [
+      "Days for shipment (scheduled)",
+      "Shipping Mode_index",
+      "Order Status_index",
+      "Type_index",
+      "Customer Zipcode",
+      "Customer City_index",
+      "Order Item Quantity",
+      "Department Id",
+      "Customer Segment_index",
+      "Customer Lname_index",
+      "Customer State_index"
+    ],
+    "coefficients": [
+      -3.463462881587846,
+      -2.67024656828788,
+      -0.3599876142250502,
+      0.14312818645042738,
+      0.00490032366047849,
+      0.015818112167180536,
+      -0.0015687701604190874,
+      0.0020566281683824985,
+      -0.0019951096803098355,
+      0.0005061715547804857,
+      -0.009104275902512194
+    ],
+    "intercept": 0.2689284822191327,
+    "scaler_mean": [
+      2.9318368160968014,
+      0.6650619363130728,
+      1.8677510138054823,
+      1.0646176346754714,
+      35920.24669820739,
+      94.20624570656119,
+      2.127706251246485,
+      5.443454029738291,
+      0.6605247412857029,
+      199.41758814013707,
+      4.906502758880519
+    ],
+    "scaler_std": [
+      1.3744565206868284,
+      0.92442689486211,
+      1.9508479746520466,
+      1.0225029886988728,
+      37542.214612670636,
+      140.61409780271018,
+      1.4534691092222043,
+      1.629175234122721,
+      0.7624045874502648,
+      258.6573618623081,
+      7.800027403911353
+    ]
   }
 }

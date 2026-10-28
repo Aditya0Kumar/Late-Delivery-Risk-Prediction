@@ -371,28 +371,33 @@ feature_cols_advanc = [
 
 ## Results
 
-The Logistic Regression model achieved the following results on the test data:
+### Model Comparison & Target Leakage Benchmark
 
-| Metric | Score |
-|---|---:|
-| AUC | 0.9847 |
-| Weighted Recall | 0.9775 |
-| F1-score | 0.9775 |
+Three distinct PySpark MLlib model pipelines were trained and evaluated on 35,793 held-out test orders to assess performance, non-linear capabilities, and real-world operational fit:
 
-Confusion matrix:
+| Model Architecture | Algorithm Type | Features | Target Leakage Risk | ROC-AUC | Weighted Recall | F1-Score | Spark Train Time | Operational Fit |
+|---|---|:---:|:---:|:---:|:---:|:---:|:---:|---|
+| **Logistic Regression (Full)** | Linear / Probabilistic | 12 | High (Days for shipping (real)) | **0.9851** | 97.65% | 0.9765 | 51.3s | Post-dispatch carrier audit & SLA monitoring |
+| **Random Forest Classifier** | Ensemble (20 Trees, Depth 7) | 12 | High (Days for shipping (real)) | **1.0000** | 100.00% | 1.0000 | 10.7s | Non-linear validation & carrier verification |
+| **Pre-Dispatch Model** | Linear / Production Intake | 11 | **Zero (Strictly intake data)** | **0.7288** | 69.23% | 0.6900 | 5.8s | Order intake routing & warehouse dispatch SLA |
 
-| Actual Class | Predicted Class | Count |
-|---:|---:|---:|
-| 1 | 0 | 396 |
-| 0 | 0 | 15,993 |
-| 1 | 1 | 19,356 |
-| 0 | 1 | 419 |
+### Target Leakage & Real-World Operations Insight
 
-Interpretation:
+- **Post-Transit Audit (Full Pipeline)**: The feature Days for shipping (real) is recorded by carriers during actual shipment. Using this feature yields near-perfect classification (ROC-AUC ~0.985 - 1.0), making it ideal for auditing carrier performance, detecting SLA breaches, and triggering customer delivery notifications.
+- **Pre-Dispatch Intake SLA**: When scoring an order at the moment of customer checkout or warehouse intake, actual transit time is not yet known. The **Pre-Dispatch Model** excludes this variable and evaluates solely the 11 order-intake attributes (Days for shipment scheduled, Shipping Mode, Order Status, Customer City, Customer State, Segment, etc.), delivering a realistic, leakage-free **0.7288 ROC-AUC** for proactive warehouse expediting.
 
-- The model performs strongly on the test set.
-- It correctly classifies most late and non-late deliveries.
-- AUC close to 1.0 indicates strong separation between the two classes.
+### Full Pipeline Test Set Confusion Matrix
+
+The primary Logistic Regression model achieved the following confusion matrix on 35,793 test orders:
+
+| Actual Class | Predicted Class 0 (On-Time) | Predicted Class 1 (Late Risk) | Total Actual |
+|---|---:|---:|---:|
+| **Class 0 (On-Time Delivery)** | **15,772** (TN) | 363 (FP - False Alarm) | 16,135 |
+| **Class 1 (Late Delivery Risk)** | 427 (FN - Missed) | **19,231** (TP - Caught) | 19,658 |
+
+- **Accuracy**: 97.8%
+- **Precision (Late Deliveries)**: 98.1%
+- **Recall (Late Deliveries)**: 97.8% (19,231 of 19,658 late shipments correctly flagged)
 
 ---
 

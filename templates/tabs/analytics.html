@@ -95,6 +95,89 @@
 
   </div>
 
+  <!-- Model Comparison & Target Leakage Benchmark -->
+  <div class="bg-card-dark border border-card rounded-xl p-6 space-y-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#212823] pb-3">
+      <div>
+        <h3 class="text-lg font-serif-display text-[#f2f5ef]">Model Comparison & Target Leakage Benchmark</h3>
+        <p class="text-xs text-[#808d85]">Benchmarking PySpark MLlib models across feature scope, data leakage, and operational fit.</p>
+      </div>
+      <span class="text-xs font-mono text-emerald-400 bg-[#14231b] px-3 py-1 rounded-lg border border-[#234b34]">
+        3 Architectures Evaluated
+      </span>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs text-[#c4ceca]">
+        <thead class="bg-[#171d19] text-[#738278] uppercase text-[10px] font-mono border-b border-[#212823]">
+          <tr>
+            <th class="py-3 px-3">Model Architecture</th>
+            <th class="py-3 px-3">Algorithm Type</th>
+            <th class="py-3 px-3">Features</th>
+            <th class="py-3 px-3">Target Leakage Risk</th>
+            <th class="py-3 px-3">ROC-AUC</th>
+            <th class="py-3 px-3">Recall</th>
+            <th class="py-3 px-3">F1-Score</th>
+            <th class="py-3 px-3">Spark Train Time</th>
+            <th class="py-3 px-3">Operational Fit</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#1e2520] font-sans text-xs">
+          {% for m in meta.get('model_comparison', []) %}
+          <tr class="hover:bg-[#18201b] transition">
+            <td class="py-3 px-3 font-semibold text-white">
+              {{ m.name }}
+            </td>
+            <td class="py-3 px-3 text-[#9fb0a5]">
+              {{ m.type }}
+            </td>
+            <td class="py-3 px-3 font-mono font-bold text-slate-300">
+              {{ m.features_count }} features
+            </td>
+            <td class="py-3 px-3">
+              {% if 'Zero' in m.leakage_risk %}
+                <span class="px-2 py-0.5 rounded bg-[#182a20] text-[#34d399] font-mono text-[11px] font-bold border border-[#274b37]">
+                  Zero Leakage
+                </span>
+              {% else %}
+                <span class="px-2 py-0.5 rounded bg-[#2d1b1d] text-[#f87171] font-mono text-[11px] font-bold border border-[#52252a]">
+                  High (Real Days)
+                </span>
+              {% endif %}
+            </td>
+            <td class="py-3 px-3 font-mono font-bold {% if m.auc >= 0.98 %}text-emerald-400{% else %}text-amber-400{% endif %}">
+              {{ "%.4f"|format(m.auc) }}
+            </td>
+            <td class="py-3 px-3 font-mono text-slate-300">
+              {{ "%.2f"|format(m.recall * 100) }}%
+            </td>
+            <td class="py-3 px-3 font-mono text-slate-300">
+              {{ "%.4f"|format(m.f1) }}
+            </td>
+            <td class="py-3 px-3 font-mono text-[#7e8c83]">
+              {{ m.train_time_sec }}s
+            </td>
+            <td class="py-3 px-3 text-[#9fb0a5]">
+              {{ m.best_for }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Explanatory Callout -->
+    <div class="p-4 rounded-xl bg-[#151c17] border border-[#233527] text-xs space-y-1 text-[#8fa896]">
+      <div class="flex items-center space-x-2 text-[#bde0c9] font-medium">
+        <i data-lucide="info" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+        <span>Target Leakage & Real-World Operations Insight:</span>
+      </div>
+      <p class="leading-relaxed pl-6">
+        The full Logistic Regression and Random Forest models utilize <span class="font-mono text-slate-200">Days for shipping (real)</span>, achieving ~0.985 - 1.0 AUC for <strong>post-transit audit and carrier SLA compliance monitoring</strong>. When scoring at the moment of order intake before dispatch, transit duration is unknown; the <strong>Pre-Dispatch Model</strong> uses solely the 11 intake features to achieve a clean, leakage-free <strong>0.7288 ROC-AUC</strong> for warehouse routing and expediting.
+      </p>
+    </div>
+  </div>
+
   <!-- Correlation Heatmap Viewer -->
   <div class="bg-card-dark border border-card rounded-xl p-6 space-y-4">
     <div class="flex items-center justify-between border-b border-[#212823] pb-3">
