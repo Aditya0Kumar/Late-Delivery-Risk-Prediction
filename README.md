@@ -406,14 +406,14 @@ Three distinct PySpark MLlib model pipelines were trained and evaluated on 35,79
 
 | Model Architecture | Algorithm Type | Features | Target Leakage Risk | ROC-AUC | Weighted Recall | F1-Score | Spark Train Time | Operational Fit |
 |---|---|:---:|:---:|:---:|:---:|:---:|:---:|---|
-| **Logistic Regression (Full)** | Linear / Probabilistic | 12 | High (Days for shipping (real)) | **0.9851** | 97.65% | 0.9765 | 51.3s | Post-dispatch carrier audit & SLA monitoring |
-| **Random Forest Classifier** | Ensemble (20 Trees, Depth 7) | 12 | High (Days for shipping (real)) | **1.0000** | 100.00% | 1.0000 | 10.7s | Non-linear validation & carrier verification |
+| **Logistic Regression (Full)** | Linear / Probabilistic | 12 | High (`Days for shipping (real)`) | **0.9851** | 97.65% | 0.9765 | 51.3s | Post-dispatch carrier audit & SLA monitoring |
+| **Random Forest Classifier** | Ensemble (20 Trees, Depth 7) | 12 | High (`Days for shipping (real)`) | **1.0000** | 100.00% | 1.0000 | 10.7s | Non-linear validation & carrier verification |
 | **Pre-Dispatch Model** | Linear / Production Intake | 11 | **Zero (Strictly intake data)** | **0.7288** | 69.23% | 0.6900 | 5.8s | Order intake routing & warehouse dispatch SLA |
 
 ### Target Leakage & Real-World Operations Insight
 
-- **Post-Transit Audit (Full Pipeline)**: The feature Days for shipping (real) is recorded by carriers during actual shipment. Using this feature yields near-perfect classification (ROC-AUC ~0.985 - 1.0), making it ideal for auditing carrier performance, detecting SLA breaches, and triggering customer delivery notifications.
-- **Pre-Dispatch Intake SLA**: When scoring an order at the moment of customer checkout or warehouse intake, actual transit time is not yet known. The **Pre-Dispatch Model** excludes this variable and evaluates solely the 11 order-intake attributes (Days for shipment scheduled, Shipping Mode, Order Status, Customer City, Customer State, Segment, etc.), delivering a realistic, leakage-free **0.7288 ROC-AUC** for proactive warehouse expediting.
+- **Post-Transit Audit (Full Pipeline)**: The feature `Days for shipping (real)` is recorded by carriers during actual shipment. Using this feature yields near-perfect classification (ROC-AUC ~0.985 - 1.0), making it ideal for auditing carrier performance, detecting SLA breaches, and triggering customer delivery notifications.
+- **Pre-Dispatch Intake SLA**: When scoring an order at the moment of customer checkout or warehouse intake, actual transit time is not yet known. The **Pre-Dispatch Model** excludes this variable and evaluates solely the 11 order-intake attributes (`Days for shipment (scheduled)`, `Shipping Mode`, `Order Status`, `Customer City`, `Customer State`, `Segment`, etc.), delivering a realistic, leakage-free **0.7288 ROC-AUC** for proactive warehouse expediting.
 
 ### Full Pipeline Test Set Confusion Matrix
 
@@ -454,10 +454,12 @@ The repository includes a modern, production-ready web application built with **
    - Interactive weekly delivery performance trend visualization.
 
 2. **Full-Screen Order Risk Assessor (`Assess Order`)**:
-   - **Sub-millisecond Real-Time Inference**: Evaluates the learned PySpark logistic regression weights and standardizer parameters (`model_metadata.json`) without JVM latency.
-   - **Dynamic Risk Gauge**: Displays instant late delivery risk percentage, logit score ($z$), and severity level (`ON-TIME EXPECTED` vs `LATE RISK DETECTED`).
-   - **Feature Driver Breakdown**: Visualizes the exact log-odds contribution of each feature to the prediction.
-   - **Actionable Mitigation Recommendations**: Automatically outputs logistical actions (priority re-routing, carrier escalation, automated customer notifications).
+   - **Dual-Mode Inference Architecture**: Toggle seamlessly between **Post-Transit (Full Pipeline)** (12 features) and **Pre-Dispatch (Intake SLA Zero Leakage)** (11 features).
+   - **Leakage Prevention**: Disables actual transit time in Pre-Dispatch mode, evaluating risk strictly at order intake before warehouse dispatch.
+   - **Sub-millisecond Real-Time Inference**: Evaluates learned PySpark MLlib model coefficients and StandardScaler parameters (`model_metadata.json`) without JVM latency.
+   - **Dynamic Risk Gauge**: Displays instant late delivery risk percentage, logit score ($z$), decision threshold ($p \ge 0.50$), and severity classification (`ON-TIME EXPECTED` vs `LATE RISK DETECTED`).
+   - **Feature Driver Breakdown**: Visualizes the exact positive log-odds risk drivers vs negative risk cushions.
+   - **Actionable Mitigation Recommendations**: Automatically generates scenario-specific logistical actions (priority re-routing, carrier escalation, automated customer notifications).
    - **Interactive What-If Sliders & One-Click Presets**: Test standard orders, rush first class, or high-risk delays with live slider recalculation.
 
 3. **Model Intelligence & Analytics (`Model Analytics`)**:
@@ -466,8 +468,11 @@ The repository includes a modern, production-ready web application built with **
    - Embedded high-resolution correlation matrix heatmap viewer (`assets/correlation_heatmap.png`).
 
 4. **MongoDB Atlas Cloud Hub (`Order Book`)**:
-   - Live cluster connection monitor to `late-prediction.gqirgaw.mongodb.net`.
-   - Real-time order table querying documents directly from `Regression_loogistic.preprocessing` (180,519 documents).
+   - **Live Cloud Connectivity**: Real-time health monitor and ping diagnostic to `late-prediction.gqirgaw.mongodb.net`.
+   - **Live Ingested Documents**: Direct streaming query against collection `Regression_loogistic.preprocessing` (180,519 documents).
+   - **Dynamic Multi-Field Search**: Instant debounced search querying destination cities, destination countries, customer cities, and product categories using MongoDB regex `$or` operations.
+   - **Multi-Attribute Filters**: Filter orders on-the-fly by Delivery Risk Status (`Late Delivery Risk` vs `On-Time Delivery`) and Shipping Mode (`Standard Class`, `Second Class`, `First Class`, `Same Day`).
+   - **Server-Side Cursor Pagination & Match Counter**: Live count of matching documents with fast `skip` / `limit` pagination preventing client-side browser overhead.
 
 5. **Responsive Navigation**:
    - Clean top navbar pills on desktop screens.
